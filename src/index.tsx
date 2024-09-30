@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Root from "./routes/root";
+import "./index.css";
+
+import Root from "./pages/root";
 import ErrorPage from "./errror-page";
-import Update from "./routes/update";
-import Details from "./routes/details";
-import { Search } from "./routes/search";
+import Update from "./pages/update";
+import Details from "./pages/details";
+import Search from "./pages/search";
 
 const router = createBrowserRouter([
   {
@@ -39,8 +39,3 @@ root.render(
     <RouterProvider router={router} />
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
