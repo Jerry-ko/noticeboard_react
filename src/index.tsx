@@ -5,7 +5,7 @@ import "./index.css";
 
 import Root from "./pages/root";
 import ErrorPage from "./errror-page";
-import Update from "./pages/update";
+import Update, { formDataProps } from "./pages/update";
 import Details from "./pages/details";
 import Search from "./pages/search";
 
@@ -18,6 +18,11 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Search />,
+        loader: () => {
+          const users = localStorage.getItem("user");
+          const datas: formDataProps[] = users ? JSON.parse(users) : [];
+          return datas;
+        },
       },
       {
         path: "update",

@@ -1,9 +1,12 @@
 import React from "react";
+import { redirect } from "react-router-dom";
 import { Button } from "../components/button";
 import { Input } from "../components/input";
 
-interface dataProps {
-  [index: string]: string | number;
+export interface formDataProps {
+  name: string;
+  contact: number;
+  email: string;
 }
 
 export default function Update() {
@@ -11,7 +14,7 @@ export default function Update() {
     event.preventDefault();
 
     const formData = new FormData(event.target as HTMLFormElement);
-    const data = Object.fromEntries(formData);
+    const data = Object.fromEntries(formData) as unknown as formDataProps;
 
     const EMPTY_MESSAGE = "을(를) 입력해주세요";
 
@@ -48,15 +51,33 @@ export default function Update() {
 
     for (const key in data) {
       for (const func of ValidationList[key]) {
-        debugger;
         const { isValid, guideText } = func(data, key);
 
         if (isValid) {
           document.getElementById(`${key}_guide`)!.innerHTML = "";
         } else {
           document.getElementById(`${key}_guide`)!.innerHTML = guideText;
+          return;
         }
       }
+    }
+
+    const result = window.confirm("저장하시겠습니까?");
+    const current = localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user")!)
+      : [];
+
+    if (result) {
+      localStorage.setItem("user", JSON.stringify([...current, data]));
+      window.alert("저장되었습니다.");
+    }
+  };
+
+  const handleClose = () => {
+    const result = window.confirm("수정하기를 그만두시겠습니까?");
+
+    if (result) {
+      window.location.replace("/");
     }
   };
 
@@ -92,8 +113,8 @@ export default function Update() {
         </div>
 
         <div className="flex justify-end gap-2">
-          <Button type="button">닫기</Button>
-          <Button>저장</Button>
+          <Button onClick={handleClose}>닫기</Button>
+          <Button type="submit">저장</Button>
         </div>
       </form>
     </div>
@@ -106,7 +127,7 @@ const ErrorText = ({ id }: { id: string }) => {
 
 // 저장 버튼 클릭 시
 // 1. validation 검사
-// 2. validation 검사 true 일 경우 ->
+// 2. validation 검사 true 일 경우
 // '저장하시겠습니까?' 컨펌 -> true일 경우 저장하고 상세 페이지로,
 // false 일 경우 창 닫고 페이지 유지
 
@@ -122,3 +143,9 @@ const ErrorText = ({ id }: { id: string }) => {
 // 배열 순회시 각 항목의 핸들러 함수에 property와 data[property]를 전달한다
 // 핸들러 함수는 유효성 체크 결과(boolean)와 안내 문구를 반환한다
 // 유효성 체크 결과가 true일 시 안내 문구를 반환한다
+
+//todo:
+//id 생성하여 동일한 id인지 체크
+//some, includes 차이, 사용법 (동일한 아이디 중복 체크시)
+//as unknown
+//window.location.href / window.location.replace 차이, react router dom 에서는?

@@ -15,11 +15,15 @@ export const Input = ({
 }: InputProps) => {
   return (
     <div className="flex gap-2 items-center">
-      <label className="w-1/6" htmlFor={id}>
-        {label}
-      </label>
+      {label && (
+        <label className="w-1/6" htmlFor={id}>
+          {label}
+        </label>
+      )}
       <input
-        className="rounded border border-gray-500 p-2 w-5/6"
+        className={`rounded border border-gray-500 p-2 ${
+          label ? "w-5/6" : "w-auto"
+        }`}
         type={type}
         id={id}
         name={name}
