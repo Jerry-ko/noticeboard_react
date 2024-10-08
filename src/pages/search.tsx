@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { Button } from "../components/button";
 import { Input } from "../components/input";
@@ -14,6 +14,7 @@ interface headerProps {
 export default function Search() {
   //todo: loader, useLoaderData 찾아보기
   const [data, setData] = useState(useLoaderData() as formDataProps[]);
+  const textsRef = useRef(null);
 
   const header: headerProps[] = [
     {
@@ -70,13 +71,14 @@ export default function Search() {
     const users = localStorage.getItem("user");
     const data = users ? JSON.parse(users) : [];
     setData(data);
+    textsRef.current = null;
   };
 
   return (
     <div>
       <form className="flex gap-2" onSubmit={handleSearch}>
         <div>
-          <Input name="name" placeholder="이름을 입력해주세요" />
+          <Input name="name" placeholder="이름을 입력해주세요" ref={textsRef} />
         </div>
 
         <div className="flex gap-2">
