@@ -2,9 +2,10 @@ import React, { useRef, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { Button } from "../components/button";
 import { Input } from "../components/input";
-import { formDataProps } from "./update";
+import { formDataProps } from "./create";
 
 interface headerProps {
+  className?: string;
   name?: string;
   key?: keyof formDataProps;
   width?: string;
@@ -13,32 +14,35 @@ interface headerProps {
 
 export default function Search() {
   //todo: loader, useLoaderData 찾아보기
+  //todo: useRef 찾아보기
   const [data, setData] = useState(useLoaderData() as formDataProps[]);
   const textsRef = useRef(null);
 
   const header: headerProps[] = [
     {
+      className: "text-center",
       name: "체크박스",
-      render: () => <input type="checkbox" />,
       width: "50px",
+      render: () => <input type="checkbox" />,
     },
     {
       name: "이름",
-      width: "80px",
+      width: "120px",
       key: "name",
     },
     {
       name: "연락처",
-      width: "150px",
+      width: "200px",
       key: "contact",
     },
     {
       name: "이메일",
-      width: "250px",
+      width: "300px",
       key: "email",
     },
     {
       name: "버튼",
+      width: "100px",
       render: () => {
         return (
           <div className="flex gap-2">
@@ -68,7 +72,7 @@ export default function Search() {
 
   const handleInitialization = () => {
     //todo: loader와 동일, 커스텀훅으로 만들기(?)
-    const users = localStorage.getItem("user");
+    const users = localStorage.getItem("users");
     const data = users ? JSON.parse(users) : [];
     setData(data);
     textsRef.current = null;
@@ -98,14 +102,18 @@ export default function Search() {
 
       <table>
         <colgroup>
-          {header.map(({ width }, index) => {
-            return <col key={index} width={width} />;
+          {header.map(({ width, className }, index) => {
+            return <col className={className} key={index} width={width} />;
           })}
         </colgroup>
         <thead>
           <tr>
-            {header.map(({ render, name }) => {
-              return <td key={name}>{render ? render() : name}</td>;
+            {header.map(({ className, render, name }) => {
+              return (
+                <td className={`border ${className}`} key={name}>
+                  {render ? render() : name}
+                </td>
+              );
             })}
           </tr>
         </thead>
@@ -113,8 +121,12 @@ export default function Search() {
           {data.map((d, index) => {
             return (
               <tr key={`${index}${d.name}`}>
-                {header.map(({ render, key }, idx) => {
-                  return <td key={idx}>{render ? render() : d[key!]}</td>;
+                {header.map(({ className, key, render }, idx) => {
+                  return (
+                    <td className={`border ${className}`} key={idx}>
+                      {render ? render() : d[key!]}
+                    </td>
+                  );
                 })}
               </tr>
             );

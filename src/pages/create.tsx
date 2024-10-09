@@ -1,15 +1,16 @@
 import React from "react";
-import { redirect } from "react-router-dom";
 import { Button } from "../components/button";
 import { Input } from "../components/input";
+import { ErrorText } from "../components/texts";
 
+//todo: 타입 정리
 export interface formDataProps {
   name: string;
-  contact: number;
+  contact: string;
   email: string;
 }
 
-export default function Update() {
+export default function Create() {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -63,12 +64,12 @@ export default function Update() {
     }
 
     const result = window.confirm("저장하시겠습니까?");
-    const current = localStorage.getItem("user")
-      ? JSON.parse(localStorage.getItem("user")!)
+    const current = localStorage.getItem("users")
+      ? JSON.parse(localStorage.getItem("users")!)
       : [];
 
     if (result) {
-      localStorage.setItem("user", JSON.stringify([...current, data]));
+      localStorage.setItem("users", JSON.stringify([...current, data]));
       window.alert("저장되었습니다.");
     }
   };
@@ -121,10 +122,6 @@ export default function Update() {
   );
 }
 
-const ErrorText = ({ id }: { id: string }) => {
-  return <p className="mt-2 ml-[18%] text-red-500 text-sm" id={id}></p>;
-};
-
 // 저장 버튼 클릭 시
 // 1. validation 검사
 // 2. validation 검사 true 일 경우
@@ -149,3 +146,5 @@ const ErrorText = ({ id }: { id: string }) => {
 //some, includes 차이, 사용법 (동일한 아이디 중복 체크시)
 //as unknown
 //window.location.href / window.location.replace 차이, react router dom 에서는?
+//추가,수정 페이지를 함께 쓰려고 했으나 url이 다를 수 있어 각각 다른 페이지로 분리했는데, (수정페이지에서는 id를 받아야 하나, 추가는 id 없음)
+//url을 옵셔널로 받는다던가 더 좋은 방법이 있을까?

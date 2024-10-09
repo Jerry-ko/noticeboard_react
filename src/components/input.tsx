@@ -6,6 +6,7 @@ interface InputProps {
   id?: string;
   name?: string;
   placeholder?: string;
+  defaultValue?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
 }
 
@@ -17,7 +18,7 @@ export const Input = forwardRef(
       id,
       name,
       placeholder,
-
+      defaultValue,
       onChange,
     }: InputProps,
     ref: React.LegacyRef<HTMLInputElement>
@@ -37,6 +38,7 @@ export const Input = forwardRef(
           id={id}
           name={name}
           placeholder={placeholder}
+          defaultValue={defaultValue}
           ref={ref}
           onChange={onChange}
         />
