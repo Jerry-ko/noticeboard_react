@@ -2,16 +2,22 @@ import { Outlet, useLocation } from "react-router-dom";
 
 export default function Root() {
   const { pathname } = useLocation();
+  const location = useLocation();
+  console.log("location", location);
 
-  let pageTitle = "";
+  let pageTitle;
+
   switch (pathname) {
     case "/":
       pageTitle = "조회";
       break;
-    case "/update":
+    case "/create":
+      pageTitle = "생성";
+      break;
+    case `/edit/:id`:
       pageTitle = "수정";
       break;
-    case "/details":
+    case "/details/:id":
       pageTitle = "상세";
       break;
     default:

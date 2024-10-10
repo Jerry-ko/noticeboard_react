@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useParams } from "react-router-dom";
 import { Button } from "../components/button";
 import { Input } from "../components/input";
 import { ErrorText } from "../components/texts";
@@ -6,7 +6,8 @@ import { formDataProps } from "./create";
 
 export default function Edit() {
   const user = useLoaderData() as formDataProps;
-  console.log("user", user);
+  const { userId } = useParams();
+
   //todo: 커스텀 훅으로 정리
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -78,6 +79,7 @@ export default function Edit() {
     if (result) {
       localStorage.setItem("users", JSON.stringify(updatedUsers));
       window.alert("저장되었습니다.");
+      window.location.replace(`/details/${userId}`);
     }
   };
 

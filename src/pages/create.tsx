@@ -5,6 +5,7 @@ import { ErrorText } from "../components/texts";
 
 //todo: 타입 정리
 export interface formDataProps {
+  id?: number | string;
   name: string;
   contact: string;
   email: string;
@@ -63,6 +64,9 @@ export default function Create() {
       }
     }
 
+    const userId = Math.round(Math.random() * 10000);
+    data["id"] = userId;
+
     const result = window.confirm("저장하시겠습니까?");
     const current = localStorage.getItem("users")
       ? JSON.parse(localStorage.getItem("users")!)
@@ -71,6 +75,7 @@ export default function Create() {
     if (result) {
       localStorage.setItem("users", JSON.stringify([...current, data]));
       window.alert("저장되었습니다.");
+      window.location.replace(`/details/${userId}`);
     }
   };
 
@@ -147,4 +152,4 @@ export default function Create() {
 //as unknown
 //window.location.href / window.location.replace 차이, react router dom 에서는?
 //추가,수정 페이지를 함께 쓰려고 했으나 url이 다를 수 있어 각각 다른 페이지로 분리했는데, (수정페이지에서는 id를 받아야 하나, 추가는 id 없음)
-//url을 옵셔널로 받는다던가 더 좋은 방법이 있을까?
+//url을 옵셔널로 받는다던가 더 좋은 방법이 있을까?  -> 옵셔널 세그먼트 사용해서 추가, 수정 페이지 하나로 쓸 수 있음 --> todo

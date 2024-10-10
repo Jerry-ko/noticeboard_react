@@ -5,14 +5,13 @@ import { formDataProps } from "./create";
 export default function Details() {
   const user = useLoaderData() as formDataProps;
   //todo: useParam/ useRef / redirect 찾아보기
-  const { id } = useParams();
+  const { userId } = useParams();
 
   const handlelModify = () => {
     const response = window.confirm("수정하시겠습니까?");
 
     if (response) {
-      debugger;
-      window.location.replace(`/edit/${id}`);
+      window.location.replace(`/edit/${userId}`);
     }
   };
 

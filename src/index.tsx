@@ -30,33 +30,30 @@ const router = createBrowserRouter([
         element: <Create />,
       },
       {
-        path: "edit/:id",
+        path: "edit/:userId",
         element: <Edit />,
         loader: ({ params }) => {
           const users = localStorage.getItem("users")
             ? JSON.parse(localStorage.getItem("users")!)
             : [];
           const result =
-            users.find(({ contact }: { contact: string }) => {
-              return contact === params.id;
+            users.find(({ id }: { id: string }) => {
+              return id == params.userId;
             }) ?? null;
           return result;
         },
       },
       {
-        path: "details/:id",
+        path: "details/:userId",
         element: <Details />,
         //todo: loader 컴포넌트화
         loader: ({ params }) => {
           const users = localStorage.getItem("users")
             ? JSON.parse(localStorage.getItem("users")!)
             : [];
-          //todo: contact가 아닌 id로 수정
           const result =
-            users?.find(
-              ({ contact }: { contact: string }) => contact === params.id
-            ) ?? null;
-
+            users?.find(({ id }: { id: string }) => id == params.userId) ??
+            null;
           return result;
         },
       },
