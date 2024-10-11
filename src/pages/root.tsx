@@ -7,6 +7,7 @@ export default function Root() {
 
   let pageTitle;
 
+  //todo: 수정
   switch (pathname) {
     case "/":
       pageTitle = "조회";

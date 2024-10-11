@@ -1,8 +1,9 @@
-import { redirect, useLoaderData, useParams } from "react-router-dom";
+import { useLoaderData, useParams, useRouteLoaderData } from "react-router-dom";
 import { Button } from "../components/button";
 import { formDataProps } from "./create";
 
 export default function Details() {
+  const currentUsers = useRouteLoaderData("root");
   const user = useLoaderData() as formDataProps;
   //todo: useParam/ useRef / redirect 찾아보기
   const { userId } = useParams();
@@ -15,9 +16,31 @@ export default function Details() {
     }
   };
 
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    const users = JSON.parse(localStorage.getItem("users")!);
 
-  const handleClose = () => {};
+    const response = window.confirm("삭제하시겠습니까?");
+
+    if (response) {
+      const result = users.filter((user: formDataProps) => {
+        //todo: id string/number 타입 일치
+        return user.id !== Number(userId);
+      });
+      debugger;
+
+      localStorage.setItem("users", JSON.stringify(result));
+      window.alert("삭제되었습니다.");
+      window.location.replace("/");
+    }
+  };
+
+  const handleClose = () => {
+    const response = window.confirm("이 페이지를 벗어나시겠습니까?");
+
+    if (response) {
+      window.location.replace("/");
+    }
+  };
 
   return (
     <div>
