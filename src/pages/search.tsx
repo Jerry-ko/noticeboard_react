@@ -105,7 +105,8 @@ export default function Search() {
     }
   };
 
-  //todo: window.alert / window.confirm 훅으로 만들기
+  //todo: window.alert / window.confirm useReducer 이용한 커스텀 훅으로 만들기
+  //todo: 수정 삭제 기능 useReducer 이용한 커스텀 훅으로 만들기
 
   const handleEdit = () => {
     const result = checkboxRefs.current.filter((cb) => cb.checked === true);
@@ -120,6 +121,29 @@ export default function Search() {
       const response = window.confirm("선택한 대상을 수정하시겠습니까?");
       if (response) {
         window.location.href = `/edit/${id}`;
+      }
+    }
+  };
+
+  const handleDelete = () => {
+    const result = checkboxRefs.current.filter((cb) => cb.checked === true);
+
+    if (!result.length) {
+      window.alert("삭제할 대상을 선택해주세요");
+    } else {
+      const response = window.confirm("정말로 삭제하시겠습니까?");
+
+      if (response) {
+        const idList = result.map((re) => re.value);
+
+        const users = data.filter((d) =>
+          idList.every((id) => Number(d.id) !== Number(id))
+        );
+
+        //todo: 로컬스토리지 저장, setdata 갱신 따로 하는데,
+        //한번에 갱신될 수 있는 방법 찾기
+        localStorage.setItem("users", JSON.stringify(users));
+        setData(users);
       }
     }
   };
@@ -153,7 +177,7 @@ export default function Search() {
         <div className="flex gap-2">
           <Button onClick={handleAdd}>추가</Button>
           <Button onClick={handleEdit}>수정</Button>
-          <Button>삭제</Button>
+          <Button onClick={handleDelete}>삭제</Button>
         </div>
       </div>
 
