@@ -21,58 +21,6 @@ export default function Search() {
   const checkboxRefs = useRef<any[]>([]);
   const textsRef = useRef(null);
 
-  const header: headerProps[] = [
-    {
-      className: "text-center",
-      name: "체크박스",
-      width: "50px",
-      render: (refs, index, id, onChange) => {
-        return (
-          <input
-            type="checkbox"
-            ref={(ref) => {
-              if (refs) {
-                refs.current[index] = ref;
-              }
-            }}
-            value={id}
-            onChange={({ target }) => {
-              refs.current[index].checked = target.checked;
-              onChange && onChange(target.checked);
-            }}
-          />
-        );
-      },
-    },
-    {
-      name: "이름",
-      width: "120px",
-      key: "name",
-    },
-    {
-      name: "연락처",
-      width: "200px",
-      key: "contact",
-    },
-    {
-      name: "이메일",
-      width: "300px",
-      key: "email",
-    },
-    {
-      name: "버튼",
-      width: "100px",
-      render: () => {
-        return (
-          <div className="flex gap-2">
-            <Button>수정</Button>
-            <Button>삭제</Button>
-          </div>
-        );
-      },
-    },
-  ];
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -117,7 +65,6 @@ export default function Search() {
       window.alert("수정할 대상을 한 개만 선택해주세요");
     } else {
       const id = result[0].value;
-      console.log("id", id);
       const response = window.confirm("선택한 대상을 수정하시겠습니까?");
       if (response) {
         window.location.href = `/edit/${id}`;
@@ -131,6 +78,7 @@ export default function Search() {
     if (!result.length) {
       window.alert("삭제할 대상을 선택해주세요");
     } else {
+      //todo: 단품 삭제와 모두 삭제 시 메세지 다르게 출력 useReducer 이용해 수정
       const response = window.confirm("정말로 삭제하시겠습니까?");
 
       if (response) {
@@ -148,7 +96,13 @@ export default function Search() {
     }
   };
 
-  const handleRow = (userId: string | number | null) => {};
+  const handleRow = (e: any, index: number) => {
+    //todo: 버블링 캡쳐링 살펴보기
+    e.stopPropagation();
+    checkboxRefs.current[index].checked = !checkboxRefs.current[index].checked;
+    const unchecked = checkboxRefs.current.some((cb) => cb.checked === false);
+    allCheckboxRefs.current[0].checked = !unchecked;
+  };
 
   const handleAllCheck = (checked: boolean) => {
     checkboxRefs.current.forEach((cb) => (cb.checked = checked));
@@ -184,45 +138,61 @@ export default function Search() {
       {/* todo: table 수정 */}
       <table>
         <colgroup>
-          {header.map(({ width, className }, index) => {
-            return <col className={className} key={index} width={width} />;
-          })}
+          <col width={"80px"} />
+          <col width={"100px"} />
+          <col width={"140px"} />
+          <col width={"140px"} />
+          <col width={"180px"} />
         </colgroup>
 
         <thead>
           <tr>
-            {header.map(({ className, render, name }) => {
-              return (
-                <td className={`border ${className}`} key={name}>
-                  {render
-                    ? render(allCheckboxRefs, 0, "all", handleAllCheck)
-                    : name}
-                </td>
-              );
-            })}
+            <td>
+              <input
+                type="checkbox"
+                ref={(ref) => {
+                  if (ref) {
+                    allCheckboxRefs.current[0] = ref;
+                  }
+                }}
+                onChange={({ target }) => handleAllCheck(target.checked)}
+              />
+            </td>
+            <td>이름</td>
+            <td>연락처</td>
+            <td>이메일</td>
+            <td>
+              <Button onClick={handleEdit}>수정</Button>
+              <Button onClick={handleDelete}>삭제</Button>
+            </td>
           </tr>
         </thead>
         <tbody>
           {data.map((d, index) => {
             return (
               <tr
-                // ref={(ref) => {
-                //   if (ref) {
-                //     checkboxRefs.current[index] = ref;
-                //   }
-                // }}
                 key={`${index}${d.name}`}
-                // onClick={() => handleRow(d.id ?? null)}
+                onClick={(e) => handleRow(e, index)}
               >
-                {header.map(({ className, key, render }, idx) => {
-                  return (
-                    <td className={`border ${className}`} key={idx}>
-                      {render
-                        ? render(checkboxRefs, index, d.id, handleCheck)
-                        : d[key!]}
-                    </td>
-                  );
-                })}
+                <td>
+                  <input
+                    type="checkbox"
+                    ref={(ref) => {
+                      if (ref) {
+                        checkboxRefs.current[index] = ref;
+                      }
+                    }}
+                    value={d.id}
+                    onChange={handleCheck}
+                  />
+                </td>
+                <td>{d.name}</td>
+                <td>{d.contact}</td>
+                <td>{d.email}</td>
+                <td>
+                  <Button onClick={handleEdit}>수정</Button>
+                  <Button onClick={handleDelete}>삭제</Button>
+                </td>
               </tr>
             );
           })}
