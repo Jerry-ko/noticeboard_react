@@ -16,7 +16,8 @@ interface headerProps {
 
 export default function Search() {
   //todo: useRef 찾아보기,
-  const [data, setData] = useState(useLoaderData() as formDataProps[]);
+  const users = useLoaderData() as formDataProps[];
+  const [data, setData] = useState(users);
   const allCheckboxRefs = useRef<any[]>([]);
   const checkboxRefs = useRef<any[]>([]);
   const textsRef = useRef(null);
@@ -113,6 +114,29 @@ export default function Search() {
     allCheckboxRefs.current[0].checked = !unchecked;
   };
 
+  const handleSelect = (value: string) => {
+    const sortType = value;
+    const copied = [...data];
+    let result;
+
+    //todo: if문과 switch의 활용 차이 생각해보기
+    if (sortType === "ascending") {
+      result = copied.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
+    } else {
+      result = users;
+    }
+
+    setData(result);
+  };
+
   return (
     <div>
       <form className="flex gap-2" onSubmit={handleSearch}>
@@ -158,7 +182,17 @@ export default function Search() {
                 onChange={({ target }) => handleAllCheck(target.checked)}
               />
             </td>
-            <td>이름</td>
+            <td>
+              이름
+              <select
+                className="border"
+                name="sort-type"
+                onChange={({ target }) => handleSelect(target.value)}
+              >
+                <option value="">선택안함</option>
+                <option value="ascending">오름차순</option>
+              </select>
+            </td>
             <td>연락처</td>
             <td>이메일</td>
             <td>
